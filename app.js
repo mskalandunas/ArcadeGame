@@ -1,8 +1,8 @@
 const COLORS = {
-  BLACK: 'black',
-  GREEN: 'green',
-  RED: 'red',
-  SLATE_GREY: 'slategrey'
+  BLACK: "black",
+  GREEN: "green",
+  RED: "red",
+  SLATE_GREY: "slategrey",
 };
 
 const COLOR_APPLICATIONS = {
@@ -11,74 +11,80 @@ const COLOR_APPLICATIONS = {
   SNAKE_COLOR: COLORS.GREEN,
   SNAKE_BORDER: COLORS.BLACK,
   APPLE_COLOR: COLORS.RED,
-  APPLE_BORDER: COLORS.BLACK
+  APPLE_BORDER: COLORS.BLACK,
 };
 
-let horizontalVelocity = 10;
-let verticalVelocity = 0;
-let appleX;
-let appleY;
-let score = 0;
+const gameState = {
+  horizontalVelocity: 10,
+  verticalVelocity: 0,
+  appleX: null,
+  appleY: null,
+  score: 0,
+  snake: [
+    { x: 200, y: 200 },
+    { x: 190, y: 200 },
+    { x: 180, y: 200 },
+    { x: 170, y: 200 },
+    { x: 160, y: 200 },
+  ],
+};
 
-let snake = [
-  {x: 200, y: 200},
-  {x: 190, y: 200},
-  {x: 180, y: 200},
-  {x: 170, y: 200},
-  {x: 160, y: 200},
-];
-
-const gameboard = document.getElementById('gameboard');
+const gameboard = document.getElementById("gameboard");
 
 const gameboardContext = gameboard.getContext("2d");
 
-document.addEventListener('keydown', direction)
+document.addEventListener("keydown", direction);
 
-generate_apple();
+generateApple();
 
 function main() {
   if (gameover()) {
     return;
-  };
+  }
 
   setTimeout(function onTick() {
     clearCanvas();
     drawApple();
-    move_snake();
+    moveSnake();
     drawSnake();
     main();
   }, 100);
 }
 
-function clearCanvas () {
+function clearCanvas() {
   gameboardContext.fillStyle = COLOR_APPLICATIONS.BOARD_BACKGROUND;
   gameboardContext.strokestyle = COLOR_APPLICATIONS.BOARD_BORDER;
   gameboardContext.fillRect(0, 0, gameboard.width, gameboard.height);
   gameboardContext.strokeRect(0, 0, gameboard.width, gameboard.height);
 }
 
-function drawSnakePart (snakePart) {
+function drawSnakePart(snakePart) {
   gameboardContext.fillStyle = COLOR_APPLICATIONS.SNAKE_COLOR;
   gameboardContext.strokestyle = COLOR_APPLICATIONS.SNAKE_BORDER;
   gameboardContext.fillRect(snakePart.x, snakePart.y, 10, 10);
   gameboardContext.strokeRect(snakePart.x, snakePart.y, 10, 10);
 }
 
-function drawSnake () {
-  snake.forEach(drawSnakePart);
+function drawSnake() {
+  gameState.snake.forEach(drawSnakePart);
 }
 
 // Render movement
-function move_snake () {
-  const head = {x: snake[0].x + horizontalVelocity, y: snake[0].y + verticalVelocity};
-  snake.unshift(head);
-  const ate_food = snake[0].x === appleX && snake[0].y === appleY;
+function moveSnake() {
+  const head = {
+    x: gameState.snake[0].x + gameState.horizontalVelocity,
+    y: gameState.snake[0].y + gameState.verticalVelocity,
+  };
+  gameState.snake.unshift(head);
+  const ate_food =
+    gameState.snake[0].x === gameState.appleX &&
+    gameState.snake[0].y === gameState.appleY;
   if (ate_food) {
-    score += 1;
-    document.getElementById('score').innerHTML = score;
-    generate_apple;
+    gameState.score += 1;
+    document.getElementById("score").innerHTML = gameState.score;
+    generateApple;
   } else {
-    snake.pop();
+    gameState.snake.pop();
   }
 }
 
@@ -89,67 +95,70 @@ function direction(event) {
   const ArrowDown = 40;
 
   const keyPressed = event.keyCode;
-  const up = verticalVelocity === -10;
-  const down = verticalVelocity === 10;
-  const right = horizontalVelocity === 10;
-  const left = horizontalVelocity === -10;
-  console.log('velocity', horizontalVelocity);
+  const up = gameState.verticalVelocity === -10;
+  const down = gameState.verticalVelocity === 10;
+  const right = gameState.horizontalVelocity === 10;
+  const left = gameState.horizontalVelocity === -10;
+  console.log("velocity", gameState.horizontalVelocity);
   if (keyPressed === ArrowLeft && !right) {
-    horizontalVelocity = -10;
-    verticalVelocity= 0;
+    gameState.horizontalVelocity = -10;
+    gameState.verticalVelocity = 0;
   }
 
   if (keyPressed === ArrowUp && !down) {
-    horizontalVelocity = 0;
-    verticalVelocity = -10;
+    gameState.horizontalVelocity = 0;
+    gameState.verticalVelocity = -10;
   }
 
   if (keyPressed === ArrowRight && !left) {
-    horizontalVelocity = 10;
-    verticalVelocity = 0;
+    gameState.horizontalVelocity = 10;
+    gameState.verticalVelocity = 0;
   }
 
   if (keyPressed === ArrowDown && !up) {
-    horizontalVelocity = 0;
-    verticalVelocity = 10;
+    gameState.horizontalVelocity = 0;
+    gameState.verticalVelocity = 10;
   }
 }
 
 function gameover() {
   const SNAKE_HEAD_INDEX = 0;
-    
-  for (let i = 4; i < snake.length; i++) {
-    if (snake[i].x === snake[SNAKE_HEAD_INDEX].x && snake[i].y === snake[SNAKE_HEAD_INDEX].y) {
-      return true
+
+  for (let i = 4; i < gameState.snake.length; i++) {
+    if (
+      gameState.snake[i].x === gameState.snake[SNAKE_HEAD_INDEX].x &&
+      gameState.snake[i].y === gameState.snake[SNAKE_HEAD_INDEX].y
+    ) {
+      return true;
     }
   }
 
-  const hitLeft = snake[SNAKE_HEAD_INDEX].x < 0;
-  const hitRight = snake[SNAKE_HEAD_INDEX].x > gameboard.width - 10;
-  const hitTop = snake[SNAKE_HEAD_INDEX].y < 0;
-  const hitBottom = snake[SNAKE_HEAD_INDEX].y > gameboard.height - 10;
+  const hitLeft = gameState.snake[SNAKE_HEAD_INDEX].x < 0;
+  const hitRight = gameState.snake[SNAKE_HEAD_INDEX].x > gameboard.width - 10;
+  const hitTop = gameState.snake[SNAKE_HEAD_INDEX].y < 0;
+  const hitBottom = gameState.snake[SNAKE_HEAD_INDEX].y > gameboard.height - 10;
 
-  return hitLeft || hitRight || hitTop || hitBottom
+  return hitLeft || hitRight || hitTop || hitBottom;
 }
 
 function spawn_apple(min, max) {
-  return Math.round((Math.random() * (max-min) + min) / 10) *10;
+  return Math.round((Math.random() * (max - min) + min) / 10) * 10;
 }
 
-function generate_apple () {
-  appleX = spawn_apple(0, gameboard.width - 10);
-  appleY = spawn_apple(0, gameboard.height - 10);
-  snake.forEach (function apple_ate(part) {
-    const ate = part.x == appleX && part.y == appleY;
+function generateApple() {
+  gameState.appleX = spawn_apple(0, gameboard.width - 10);
+  gameState.appleY = spawn_apple(0, gameboard.height - 10);
+  gameState.snake.forEach(function apple_ate(part) {
+    const ate = part.x == gameState.appleX && part.y == gameState.appleY;
     if (ate) spawn_apple();
   });
 }
 
-function drawApple () {
+function drawApple() {
   gameboardContext.fillStyle = COLOR_APPLICATIONS.APPLE_COLOR;
   gameboardContext.strokestyle = COLOR_APPLICATIONS.APPLE_BORDER;
-  gameboardContext.fillRect(appleX, appleY, 10, 10);
-  gameboardContext.strokeRect(appleX, appleY, 10, 10);
+  gameboardContext.fillRect(gameState.appleX, gameState.appleY, 10, 10);
+  gameboardContext.strokeRect(gameState.appleX, gameState.appleY, 10, 10);
 }
 
 main();

@@ -33,22 +33,20 @@ const gameboard = document.getElementById("gameboard");
 
 const gameboardContext = gameboard.getContext("2d");
 
-document.addEventListener("keydown", direction);
+function onTick() {
+  clearCanvas();
+  drawApple();
+  moveSnake();
+  drawSnake();
+  runGameplayLoop();
+}
 
-generateApple();
-
-function main() {
+function runGameplayLoop() {
   if (gameover()) {
     return;
   }
 
-  setTimeout(function onTick() {
-    clearCanvas();
-    drawApple();
-    moveSnake();
-    drawSnake();
-    main();
-  }, 100);
+  setTimeout(onTick, 100);
 }
 
 function clearCanvas() {
@@ -69,7 +67,6 @@ function drawSnake() {
   gameState.snake.forEach(drawSnakePart);
 }
 
-// Render movement
 function moveSnake() {
   const head = {
     x: gameState.snake[0].x + gameState.horizontalVelocity,
@@ -93,13 +90,12 @@ function direction(event) {
   const ArrowRight = 39;
   const ArrowUp = 38;
   const ArrowDown = 40;
-
   const keyPressed = event.keyCode;
   const up = gameState.verticalVelocity === -10;
   const down = gameState.verticalVelocity === 10;
   const right = gameState.horizontalVelocity === 10;
   const left = gameState.horizontalVelocity === -10;
-  console.log("velocity", gameState.horizontalVelocity);
+
   if (keyPressed === ArrowLeft && !right) {
     gameState.horizontalVelocity = -10;
     gameState.verticalVelocity = 0;
@@ -161,4 +157,11 @@ function drawApple() {
   gameboardContext.strokeRect(gameState.appleX, gameState.appleY, 10, 10);
 }
 
-main();
+document.addEventListener("keydown", direction);
+
+function startGame() {
+  generateApple();
+  runGameplayLoop();
+}
+
+startGame();

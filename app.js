@@ -14,8 +14,8 @@ const COLOR_APPLICATIONS = {
   APPLE_BORDER: COLORS.BLACK
 };
 
-let dx = 10;
-let dy = 0;
+let horizontalVelocity = 10;
+let verticalVelocity = 0;
 let apple_x;
 let apple_y;
 let score = 0;
@@ -30,16 +30,16 @@ let snake = [
 
 const gameboard = document.getElementById('gameboard');
 
-const gameboard_ctx = gameboard.getContext("2d");
-
-main();
+const gameboardContext = gameboard.getContext("2d");
 
 document.addEventListener('keydown', direction)
 
 generate_apple();
 
 function main() {
-  if (gameover()) return;
+  if (gameover()) {
+    return;
+  };
 
   setTimeout(function onTick() {
     clearCanvas();
@@ -47,21 +47,21 @@ function main() {
     move_snake();
     drawSnake();
     main();
-  }, 100)
+  }, 100);
 }
-// Initial game state
+
 function clearCanvas () {
-  gameboard_ctx.fillStyle = COLOR_APPLICATIONS.BOARD_BACKGROUND;
-  gameboard_ctx.strokestyle = COLOR_APPLICATIONS.BOARD_BORDER;
-  gameboard_ctx.fillRect(0, 0, gameboard.width, gameboard.height);
-  gameboard_ctx.strokeRect(0, 0, gameboard.width, gameboard.height);
+  gameboardContext.fillStyle = COLOR_APPLICATIONS.BOARD_BACKGROUND;
+  gameboardContext.strokestyle = COLOR_APPLICATIONS.BOARD_BORDER;
+  gameboardContext.fillRect(0, 0, gameboard.width, gameboard.height);
+  gameboardContext.strokeRect(0, 0, gameboard.width, gameboard.height);
 }
 
 function drawSnakePart (snakePart) {
-  gameboard_ctx.fillStyle = COLOR_APPLICATIONS.SNAKE_COLOR;
-  gameboard_ctx.strokestyle = COLOR_APPLICATIONS.SNAKE_BORDER;
-  gameboard_ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
-  gameboard_ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+  gameboardContext.fillStyle = COLOR_APPLICATIONS.SNAKE_COLOR;
+  gameboardContext.strokestyle = COLOR_APPLICATIONS.SNAKE_BORDER;
+  gameboardContext.fillRect(snakePart.x, snakePart.y, 10, 10);
+  gameboardContext.strokeRect(snakePart.x, snakePart.y, 10, 10);
 }
 
 function drawSnake () {
@@ -70,7 +70,7 @@ function drawSnake () {
 
 // Render movement
 function move_snake () {
-  const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+  const head = {x: snake[0].x + horizontalVelocity, y: snake[0].y + verticalVelocity};
   snake.unshift(head);
   const ate_food = snake[0].x === apple_x && snake[0].y === apple_y;
   if (ate_food) {
@@ -89,38 +89,46 @@ function direction(event) {
   const ArrowDown = 40;
 
   const keyPressed = event.keyCode;
-  const up = dy === -10;
-  const down = dy === 10;
-  const right = dx === 10;
-  const left = dx === -10;
-
+  const up = verticalVelocity === -10;
+  const down = verticalVelocity === 10;
+  const right = horizontalVelocity === 10;
+  const left = horizontalVelocity === -10;
+  console.log('velocity', horizontalVelocity);
   if (keyPressed === ArrowLeft && !right) {
-    dx = -10;
-    dy= 0;
+    horizontalVelocity = -10;
+    verticalVelocity= 0;
   }
+
   if (keyPressed === ArrowUp && !down) {
-    dx = 0;
-    dy = -10;
+    horizontalVelocity = 0;
+    verticalVelocity = -10;
   }
-  if (keyPressed === ArrowRight && !right) {
-    dx = 10;
-    dx = 0;
+
+  if (keyPressed === ArrowRight && !left) {
+    horizontalVelocity = 10;
+    verticalVelocity = 0;
   }
+
   if (keyPressed === ArrowDown && !up) {
-      dx = 0;
-      dy = 10;
+    horizontalVelocity = 0;
+    verticalVelocity = 10;
   }
 }
 
 function gameover() {
+  const SNAKE_HEAD_INDEX = 0;
+    
   for (let i = 4; i < snake.length; i++) {
-    if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) 
-    return true
+    if (snake[i].x === snake[SNAKE_HEAD_INDEX].x && snake[i].y === snake[SNAKE_HEAD_INDEX].y) {
+      return true
+    }
   }
-  const hitLeft = snake[0].x < 0;
-  const hitRight = snake[0].x > gameboard.width - 10;
-  const hitTop = snake[0].y < 0;
-  const hitBottom = snake[0].y > gameboard.height - 10;
+
+  const hitLeft = snake[SNAKE_HEAD_INDEX].x < 0;
+  const hitRight = snake[SNAKE_HEAD_INDEX].x > gameboard.width - 10;
+  const hitTop = snake[SNAKE_HEAD_INDEX].y < 0;
+  const hitBottom = snake[SNAKE_HEAD_INDEX].y > gameboard.height - 10;
+
   return hitLeft || hitRight || hitTop || hitBottom
 }
 
@@ -138,9 +146,10 @@ function generate_apple () {
 }
 
 function drawApple () {
-  gameboard_ctx.fillStyle = COLOR_APPLICATIONS.APPLE_COLOR;
-  gameboard_ctx.strokestyle = COLOR_APPLICATIONS.APPLE_BORDER;
-  gameboard_ctx.fillRect(apple_x, apple_y, 10, 10);
-  gameboard_ctx.strokeRect(apple_x, apple_y, 10, 10);
+  gameboardContext.fillStyle = COLOR_APPLICATIONS.APPLE_COLOR;
+  gameboardContext.strokestyle = COLOR_APPLICATIONS.APPLE_BORDER;
+  gameboardContext.fillRect(apple_x, apple_y, 10, 10);
+  gameboardContext.strokeRect(apple_x, apple_y, 10, 10);
 }
 
+main();

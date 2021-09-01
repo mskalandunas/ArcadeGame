@@ -40,6 +40,8 @@ const gameboard = document.getElementById("Gameboard");
 
 const gameboardContext = gameboard.getContext("2d");
 
+const scoreHistory = document.getElementById('ScoreHistory');
+
 const startButton = document.getElementById("StartButton");
 
 function onTick() {
@@ -52,6 +54,12 @@ function onTick() {
 
 function runGameplayLoop() {
   if (gameover()) {
+    const li = document.createElement('li');
+
+    li.textContent = document.getElementById('Score').textContent;
+
+    scoreHistory.appendChild(li);
+
     document.removeEventListener("keydown", direction);
 
     return;

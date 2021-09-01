@@ -14,6 +14,13 @@ const COLOR_APPLICATIONS = {
   APPLE_BORDER: COLORS.BLACK,
 };
 
+const KEYS = {
+  ARROW_LEFT: 37,
+  ARROW_RIGHT: 39,
+  ARROW_UP: 38,
+  ARROW_DOWN: 40
+}
+
 const gameState = {
   horizontalVelocity: 10,
   verticalVelocity: 0,
@@ -86,32 +93,28 @@ function moveSnake() {
 }
 
 function direction(event) {
-  const ArrowLeft = 37;
-  const ArrowRight = 39;
-  const ArrowUp = 38;
-  const ArrowDown = 40;
   const keyPressed = event.keyCode;
   const up = gameState.verticalVelocity === -10;
   const down = gameState.verticalVelocity === 10;
   const right = gameState.horizontalVelocity === 10;
   const left = gameState.horizontalVelocity === -10;
 
-  if (keyPressed === ArrowLeft && !right) {
+  if (keyPressed === KEYS.ARROW_LEFT && !right) {
     gameState.horizontalVelocity = -10;
     gameState.verticalVelocity = 0;
   }
 
-  if (keyPressed === ArrowUp && !down) {
+  if (keyPressed === KEYS.ARROW_UP && !down) {
     gameState.horizontalVelocity = 0;
     gameState.verticalVelocity = -10;
   }
 
-  if (keyPressed === ArrowRight && !left) {
+  if (keyPressed === KEYS.ARROW_RIGHT && !left) {
     gameState.horizontalVelocity = 10;
     gameState.verticalVelocity = 0;
   }
 
-  if (keyPressed === ArrowDown && !up) {
+  if (keyPressed === KEYS.ARROW_DOWN && !up) {
     gameState.horizontalVelocity = 0;
     gameState.verticalVelocity = 10;
   }

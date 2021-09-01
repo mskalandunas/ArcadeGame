@@ -50,6 +50,8 @@ function onTick() {
 
 function runGameplayLoop() {
   if (gameover()) {
+    document.removeEventListener("keydown", direction);
+
     return;
   }
 
@@ -160,9 +162,9 @@ function drawApple() {
   gameboardContext.strokeRect(gameState.appleX, gameState.appleY, 10, 10);
 }
 
-document.addEventListener("keydown", direction);
-
 function startGame() {
+  document.addEventListener("keydown", direction);
+
   generateApple();
   runGameplayLoop();
 }

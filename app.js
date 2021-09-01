@@ -36,9 +36,11 @@ const gameState = {
   ],
 };
 
-const gameboard = document.getElementById("gameboard");
+const gameboard = document.getElementById("Gameboard");
 
 const gameboardContext = gameboard.getContext("2d");
+
+const startButton = document.getElementById("StartButton");
 
 function onTick() {
   clearCanvas();
@@ -82,12 +84,12 @@ function moveSnake() {
     y: gameState.snake[0].y + gameState.verticalVelocity,
   };
   gameState.snake.unshift(head);
-  const ate_food =
+  const ateFood =
     gameState.snake[0].x === gameState.appleX &&
     gameState.snake[0].y === gameState.appleY;
-  if (ate_food) {
+  if (ateFood) {
     gameState.score += 1;
-    document.getElementById("score").innerHTML = gameState.score;
+    document.getElementById("Score").innerHTML = gameState.score;
     generateApple;
   } else {
     gameState.snake.pop();
@@ -170,4 +172,10 @@ function startGame() {
   runGameplayLoop();
 }
 
-startGame();
+function initializeApp() {
+  startButton.addEventListener('click', startGame);
+
+  clearCanvas();
+}
+
+initializeApp();

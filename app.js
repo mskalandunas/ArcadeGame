@@ -16,8 +16,8 @@ const COLOR_APPLICATIONS = {
 
 let horizontalVelocity = 10;
 let verticalVelocity = 0;
-let apple_x;
-let apple_y;
+let appleX;
+let appleY;
 let score = 0;
 
 let snake = [
@@ -72,7 +72,7 @@ function drawSnake () {
 function move_snake () {
   const head = {x: snake[0].x + horizontalVelocity, y: snake[0].y + verticalVelocity};
   snake.unshift(head);
-  const ate_food = snake[0].x === apple_x && snake[0].y === apple_y;
+  const ate_food = snake[0].x === appleX && snake[0].y === appleY;
   if (ate_food) {
     score += 1;
     document.getElementById('score').innerHTML = score;
@@ -137,10 +137,10 @@ function spawn_apple(min, max) {
 }
 
 function generate_apple () {
-  apple_x = spawn_apple(0, gameboard.width - 10);
-  apple_y = spawn_apple(0, gameboard.height - 10);
+  appleX = spawn_apple(0, gameboard.width - 10);
+  appleY = spawn_apple(0, gameboard.height - 10);
   snake.forEach (function apple_ate(part) {
-    const ate = part.x == apple_x && part.y == apple_y;
+    const ate = part.x == appleX && part.y == appleY;
     if (ate) spawn_apple();
   });
 }
@@ -148,8 +148,8 @@ function generate_apple () {
 function drawApple () {
   gameboardContext.fillStyle = COLOR_APPLICATIONS.APPLE_COLOR;
   gameboardContext.strokestyle = COLOR_APPLICATIONS.APPLE_BORDER;
-  gameboardContext.fillRect(apple_x, apple_y, 10, 10);
-  gameboardContext.strokeRect(apple_x, apple_y, 10, 10);
+  gameboardContext.fillRect(appleX, appleY, 10, 10);
+  gameboardContext.strokeRect(appleX, appleY, 10, 10);
 }
 
 main();

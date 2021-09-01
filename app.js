@@ -18,8 +18,8 @@ const KEYS = {
   ARROW_LEFT: 37,
   ARROW_RIGHT: 39,
   ARROW_UP: 38,
-  ARROW_DOWN: 40
-}
+  ARROW_DOWN: 40,
+};
 
 const gameState = {
   horizontalVelocity: 10,
@@ -142,16 +142,17 @@ function gameover() {
   return hitLeft || hitRight || hitTop || hitBottom;
 }
 
-function spawn_apple(min, max) {
+function spawnApple(min, max) {
   return Math.round((Math.random() * (max - min) + min) / 10) * 10;
 }
 
 function generateApple() {
-  gameState.appleX = spawn_apple(0, gameboard.width - 10);
-  gameState.appleY = spawn_apple(0, gameboard.height - 10);
-  gameState.snake.forEach(function apple_ate(part) {
-    const ate = part.x == gameState.appleX && part.y == gameState.appleY;
-    if (ate) spawn_apple();
+  gameState.appleX = spawnApple(0, gameboard.width - 10);
+  gameState.appleY = spawnApple(0, gameboard.height - 10);
+  gameState.snake.forEach(function appleAte(part) {
+    if (part.x == gameState.appleX && part.y == gameState.appleY) {
+      spawnApple();
+    }
   });
 }
 

@@ -1,11 +1,18 @@
-const board_border = 'black';
-const board_background = "slategrey";
-const snake_col = 'green';
-const snake_border = 'black'
+const COLORS = {
+  BLACK: 'black',
+  GREEN: 'green',
+  RED: 'red',
+  SLATE_GREY: 'slategrey'
+};
 
-const apple_col = 'red'
-const apple_border = 'black'
-
+const COLOR_APPLICATIONS = {
+  BOARD_BORDER: COLORS.BLACK,
+  BOARD_BACKGROUND: COLORS.SLATE_GREY,
+  SNAKE_COLOR: COLORS.GREEN,
+  SNAKE_BORDER: COLORS.BLACK,
+  APPLE_COLOR: COLORS.RED,
+  APPLE_BORDER: COLORS.BLACK
+};
 
 let dx = 10;
 let dy = 0;
@@ -20,6 +27,7 @@ let snake = [
   {x: 170, y: 200},
   {x: 160, y: 200},
 ];
+
 const gameboard = document.getElementById('gameboard');
 
 const gameboard_ctx = gameboard.getContext("2d");
@@ -43,15 +51,15 @@ function main() {
 }
 // Initial game state
 function clearCanvas () {
-  gameboard_ctx.fillStyle = board_background;
-  gameboard_ctx.strokestyle = board_border;
+  gameboard_ctx.fillStyle = COLOR_APPLICATIONS.BOARD_BACKGROUND;
+  gameboard_ctx.strokestyle = COLOR_APPLICATIONS.BOARD_BORDER;
   gameboard_ctx.fillRect(0, 0, gameboard.width, gameboard.height);
   gameboard_ctx.strokeRect(0, 0, gameboard.width, gameboard.height);
 }
 
 function drawSnakePart (snakePart) {
-  gameboard_ctx.fillStyle = snake_col;
-  gameboard_ctx.strokestyle = snake_border;
+  gameboard_ctx.fillStyle = COLOR_APPLICATIONS.SNAKE_COLOR;
+  gameboard_ctx.strokestyle = COLOR_APPLICATIONS.SNAKE_BORDER;
   gameboard_ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
   gameboard_ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
 }
@@ -130,8 +138,8 @@ function generate_apple () {
 }
 
 function drawApple () {
-  gameboard_ctx.fillStyle = 'red'
-  gameboard_ctx.strokestyle = 'black';
+  gameboard_ctx.fillStyle = COLOR_APPLICATIONS.APPLE_COLOR;
+  gameboard_ctx.strokestyle = COLOR_APPLICATIONS.APPLE_BORDER;
   gameboard_ctx.fillRect(apple_x, apple_y, 10, 10);
   gameboard_ctx.strokeRect(apple_x, apple_y, 10, 10);
 }
